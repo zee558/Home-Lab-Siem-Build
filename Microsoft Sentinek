@@ -1,0 +1,124 @@
+# Home Lab Security Operations Center (SOC) Setup
+
+This project demonstrates the creation and configuration of a Security Operations Center (SOC) in a home lab environment using Microsoft Azure and Microsoft Sentinel. The environment includes a virtual machine (VM) for testing, a log analytics workspace, and monitoring capabilities to detect and respond to security incidents such as brute force RDP attempts.
+
+---
+
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Environment Overview](#environment-overview)
+3. [Steps to Build the SOC](#steps-to-build-the-soc)
+    - [Azure Virtual Machine Setup](#1-azure-virtual-machine-setup)
+    - [Deploying Microsoft Sentinel](#2-deploying-microsoft-sentinel)
+    - [Configuring Data Connectors](#3-configuring-data-connectors)
+    - [Creating Analytics Rules](#4-creating-analytics-rules)
+4. [Key Results and Incidents](#key-results-and-incidents)
+5. [Lessons Learned](#lessons-learned)
+6. [Future Enhancements](#future-enhancements)
+
+---
+
+## Introduction
+
+This project showcases how to set up a fully functional SOC at home to practice real-world security operations. By following these steps, you can replicate this environment to gain hands-on experience with SIEM tools, monitoring logs, and analyzing security incidents.
+
+---
+
+## Environment Overview
+
+### Tools Used
+- **Microsoft Azure**: Cloud platform to host resources.
+- **Microsoft Sentinel**: SIEM for monitoring, logging, and alerting.
+- **Windows Server VM**: Test environment for generating and analyzing security events.
+
+### Goals
+1. Set up a secure and monitored virtual environment.
+2. Simulate real-world security scenarios like brute force RDP attacks.
+3. Analyze logs and configure alerts for specific security events.
+
+---
+
+## Steps to Build the SOC
+
+### 1. Azure Virtual Machine Setup
+- **Create an Azure Free Trial Account** to access $200 credits.
+- Navigate to the Azure portal and set up a new **Resource Group** named `MadHat_Group`.
+- Deploy a **Windows Server 2019/2022 Pro Virtual Machine (VM)**:
+  - Name: `MadHat_VM`
+  - Region: East US
+  - Network: Allow **RDP (port 3389)** for remote connections.
+  - Use default disk and network configurations.
+
+- **Generate RDP Events**:
+  - The exposed RDP port attracts traffic from unauthorized sources, simulating brute force attempts.
+
+---
+
+### 2. Deploying Microsoft Sentinel
+- In Azure, search for **Microsoft Sentinel**.
+- Create a **Log Analytics Workspace**:
+  - Name: `MadHat_Logs`
+  - Region: Match the VM region (East US) to avoid latency.
+- Add Microsoft Sentinel to the workspace.
+
+---
+
+### 3. Configuring Data Connectors
+- **Install the Azure Monitor Agent (AMA)**:
+  - Go to the Sentinel workspace → `Data Connectors` → Search and install the **Azure Monitor Agent**.
+- Set up a **Data Collection Rule (DCR)**:
+  - Name: `WindowsEventsToSentinel`.
+  - Configure the rule to collect all security events from the VM.
+- Validate that logs from the VM are ingested into Sentinel.
+
+---
+
+### 4. Creating Analytics Rules
+- Create a **Custom Sentinel Rule** to detect successful RDP logins:
+  - Query: Filter successful logins excluding system accounts.
+  - Set the rule to trigger alerts for initial access every 5 minutes.
+  - Severity: Medium or High.
+- Test the rule by logging into the VM and confirming that an incident is created in Sentinel.
+
+---
+
+## Key Results and Incidents
+- **Incident Monitoring**:
+  - Successfully ingested security events such as RDP logins.
+  - Detected multiple brute force attempts from international sources (e.g., Russia, North Korea).
+- **Alerts Created**:
+  - Custom alert rules effectively generated incidents for unauthorized RDP access.
+
+---
+
+## Lessons Learned
+- The importance of **restricting RDP access** to minimize attack surfaces.
+- Hands-on experience configuring and managing Azure and Sentinel resources.
+- Practical knowledge of data connectors, analytics rules, and log ingestion.
+
+---
+
+## Future Enhancements
+1. **Add Threat Intelligence Feeds**:
+   - Ingest custom IoC feeds to detect advanced threats.
+2. **Deploy Additional Tools**:
+   - Set up Security Onion for network monitoring.
+3. **Automate Responses**:
+   - Use Sentinel Playbooks for automated incident response.
+
+---
+
+## How to Replicate This Project
+1. Clone this repository.
+2. Follow the steps outlined in the documentation to build your SOC environment.
+3. Experiment with additional configurations to enhance your lab.
+
+---
+
+## References
+- [Microsoft Azure Documentation](https://azure.microsoft.com/)
+- [Microsoft Sentinel Overview](https://learn.microsoft.com/en-us/azure/sentinel/)
+- [YouTube Crash Course](https://www.youtube.com/watch?v=IJUkGuirTGQ&t=47s)
+
+---
+
